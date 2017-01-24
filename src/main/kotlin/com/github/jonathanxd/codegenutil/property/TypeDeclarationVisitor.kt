@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
  *      Copyright (c) contributors
  *
  *
@@ -29,22 +29,24 @@ package com.github.jonathanxd.codegenutil.property
 
 import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.MutableCodeSource
-import com.github.jonathanxd.codeapi.builder.ConstructorBuilder
-import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration
+import com.github.jonathanxd.codeapi.base.TypeDeclaration
+import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder
+import com.github.jonathanxd.codeapi.common.CodeModifier
+import com.github.jonathanxd.codeapi.common.Data
+import com.github.jonathanxd.codeapi.factory.field
 import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
 import com.github.jonathanxd.codeapi.modify.visit.VisitManager
-import com.github.jonathanxd.iutils.data.MapData
-import java.lang.reflect.Modifier
+import java.util.*
 
 class TypeDeclarationVisitor(val properties: Array<out Property>) : PartVisitor<TypeDeclaration> {
 
-    override fun visit(codePart: TypeDeclaration, data: MapData, visitManager: VisitManager<*>): TypeDeclaration {
-        val body = codePart.body.map { it.toMutable() }.orElse(MutableCodeSource())
+    override fun visit(codePart: TypeDeclaration, data: Data, visitManager: VisitManager<*>): TypeDeclaration {
+        val body = codePart.body.toMutable()
 
-        val fields = this.properties.map { CodeAPI.field(Modifier.PRIVATE or Modifier.FINAL, it.type, it.name) }
+        val fields = this.properties.map { field(EnumSet.of(CodeModifier.PRIVATE, CodeModifier.FINAL), it.type, it.name) }
 
-        val constructor = ConstructorBuilder.builder()
-                .withModifiers(Modifier.PUBLIC)
+        val constructor = ConstructorDeclarationBuilder.builder()
+                .withModifiers(CodeModifier.PUBLIC)
                 .withParameters(this.properties.map { CodeAPI.parameter(it.type, it.name) })
                 .withBody(MutableCodeSource(
                         this.properties.map { CodeAPI.setThisField(it.type, it.name, CodeAPI.accessLocalVariable(it.type, it.name)) }
@@ -55,6 +57,6 @@ class TypeDeclarationVisitor(val properties: Array<out Property>) : PartVisitor<
 
         body.add(constructor)
 
-        return codePart.setBody(visitManager.visit(body, data))
+        return codePart.builder().withBody(visitManager.visit(body, data)).build()
     }
 }

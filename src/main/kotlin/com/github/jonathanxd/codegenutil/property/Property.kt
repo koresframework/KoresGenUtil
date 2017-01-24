@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
  *      Copyright (c) contributors
  *
  *
@@ -27,6 +27,6 @@
  */
 package com.github.jonathanxd.codegenutil.property
 
-import com.github.jonathanxd.codeapi.types.CodeType
+import com.github.jonathanxd.codeapi.type.CodeType
 
 data class Property(val name: String, val type: CodeType)

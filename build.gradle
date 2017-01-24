@@ -1,6 +1,6 @@
 buildscript {
-    ext.kotlin_version = '1.1-M02'
-    ext.dokka_version = '0.9.9'
+    ext.kotlin_version = '1.1.0-beta-18'
+    ext.dokka_version = '0.9.10'
 
     repositories {
         mavenCentral()
@@ -14,12 +14,12 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.hierynomus.license' version '0.11.0'
-    id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id 'com.github.hierynomus.license' version '0.13.1'
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
 }
 
 group 'com.github.jonathanxd'
-version '1.0-a'
+version '1.1'
 
 allprojects {
     // IDE
@@ -51,10 +51,11 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 
     // Utilities
-    compile 'com.github.JonathanxD:CodeAPI:2.1.7'
-    compile 'com.github.JonathanxD:CodeAPI-Conversions:1.0'
-    compile 'com.github.JonathanxD:JwIUtils:3.3.0'
+    compile 'com.github.JonathanxD:CodeAPI:3.0'
+    compile 'com.github.JonathanxD:CodeAPI-Conversions:1.2.1'
+    compile 'com.github.JonathanxD:JwIUtils:3.5.2'
 
+    testCompile 'com.github.JonathanxD:CodeAPI-BytecodeWriter:3.0.2-b'
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 

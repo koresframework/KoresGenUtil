@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
  *      Copyright (c) contributors
  *
  *
@@ -34,7 +34,7 @@ import com.github.jonathanxd.codegenutil.visitor.EmptyVisitor
 
 internal class CodeGenVisitManager<T: CodePart> : VisitManager<T>() {
 
-    override fun <U : CodePart> getVisitor(type: Class<*>?): PartVisitor<U> {
+    override fun <U : CodePart> getVisitor(type: Class<*>): PartVisitor<U> {
 
         try {
             return super.getVisitor(type)

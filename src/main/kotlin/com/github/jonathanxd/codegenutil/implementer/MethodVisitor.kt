@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
  *      Copyright (c) contributors
  *
  *
@@ -27,20 +27,20 @@
  */
 package com.github.jonathanxd.codegenutil.implementer
 
-import com.github.jonathanxd.codeapi.interfaces.MethodDeclaration
+import com.github.jonathanxd.codeapi.base.MethodDeclaration
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
 import com.github.jonathanxd.codeapi.modify.visit.VisitManager
-import com.github.jonathanxd.iutils.data.MapData
 
-class MethodVisitor(private val function: (MethodDeclaration) -> MethodDeclaration): PartVisitor<MethodDeclaration> {
+class MethodVisitor(private val function: (MethodDeclaration) -> MethodDeclaration) : PartVisitor<MethodDeclaration> {
 
-    override fun visit(codePart: MethodDeclaration, data: MapData, visitManager: VisitManager<*>): MethodDeclaration {
+    override fun visit(codePart: MethodDeclaration, data: Data, visitManager: VisitManager<*>): MethodDeclaration {
         val part = function(codePart)
 
         val body = part.body
 
-        if(body.isPresent)
-            return part.setBody(visitManager.visit(part.body.get(), data))
+        if (body.isNotEmpty)
+            return part.builder().withBody(visitManager.visit(part.body, data)).build()
 
         return part
     }

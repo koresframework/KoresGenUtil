@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
  *      Copyright (c) contributors
  *
  *
@@ -27,22 +27,13 @@
  */
 package com.github.jonathanxd.codegenutil.visitor
 
-import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.CodeSource
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
 import com.github.jonathanxd.codeapi.modify.visit.VisitManager
-import com.github.jonathanxd.iutils.data.MapData
 
 object CodeSourceVisitor : PartVisitor<CodeSource> {
-    override fun visit(codePart: CodeSource, data: MapData, visitManager: VisitManager<*>): CodeSource {
-
-        val size = codePart.size()
-        val array = arrayOfNulls<CodePart>(size)
-
-        codePart.forEachIndexed { i, codePart ->
-            array[i] = visitManager.visit(codePart, data)
-        }
-
-        return CodeSource.fromArray(array)
+    override fun visit(codePart: CodeSource, data: Data, visitManager: VisitManager<*>): CodeSource {
+        return CodeSource.fromArray(Array(codePart.size) { index -> visitManager.visit(codePart[index], data) })
     }
 }

@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
  *      Copyright (c) contributors
  *
  *
@@ -27,17 +27,18 @@
  */
 package com.github.jonathanxd.codegenutil.visitor
 
-import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration
+import com.github.jonathanxd.codeapi.base.TypeDeclaration
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
 import com.github.jonathanxd.codeapi.modify.visit.VisitManager
 import com.github.jonathanxd.iutils.data.MapData
 
 object TypeVisitor : PartVisitor<TypeDeclaration> {
-    override fun visit(codePart: TypeDeclaration, data: MapData, visitManager: VisitManager<*>): TypeDeclaration {
+    override fun visit(codePart: TypeDeclaration, data: Data, visitManager: VisitManager<*>): TypeDeclaration {
         val body = codePart.body
 
-        return if(body.isPresent)
-            codePart.setBody(visitManager.visit(body.get(), data))
+        return if (body.isNotEmpty)
+            codePart.builder().withBody(visitManager.visit(body, data)).build()
         else
             codePart
 

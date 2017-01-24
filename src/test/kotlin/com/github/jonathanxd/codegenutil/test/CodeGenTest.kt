@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
  *      Copyright (c) contributors
  *
  *
@@ -29,23 +29,23 @@ package com.github.jonathanxd.codegenutil.test
 
 import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.MutableCodeSource
-import com.github.jonathanxd.codeapi.classloader.CodeClassLoader
+import com.github.jonathanxd.codeapi.base.TypeDeclaration
+import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader
+import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator
+import com.github.jonathanxd.codeapi.common.CodeModifier
 import com.github.jonathanxd.codeapi.conversions.extend
-import com.github.jonathanxd.codeapi.gen.visit.bytecode.BytecodeGenerator
 import com.github.jonathanxd.codeapi.helper.Predefined
-import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration
-import com.github.jonathanxd.codeapi.literals.Literals
+import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codegenutil.CodeGen
 import com.github.jonathanxd.codegenutil.implementer.Implementer
 import org.junit.Test
-import java.lang.reflect.Modifier
 
 class CodeGenTest {
 
     @Test
     fun test() {
         val myDeclaration: TypeDeclaration = CodeAPI.aClassBuilder()
-                .withModifiers(Modifier.PUBLIC)
+                .withModifiers(CodeModifier.PUBLIC)
                 .withQualifiedName("com.Test")
                 .withBody(MutableCodeSource())
                 .build()
@@ -56,7 +56,7 @@ class CodeGenTest {
 
         gen.install(Implementer { method ->
             when (method.name) {
-                "a" -> method.setBody(CodeAPI.sourceOfParts(Predefined.invokePrintlnStr(Literals.STRING("A"))))
+                "a" -> method.builder().withBody(CodeAPI.sourceOfParts(Predefined.invokePrintlnStr(Literals.STRING("A")))).build()
                 else -> method
             }
         })

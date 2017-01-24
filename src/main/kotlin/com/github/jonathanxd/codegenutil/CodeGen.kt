@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
  *      Copyright (c) contributors
  *
  *
@@ -29,7 +29,7 @@ package com.github.jonathanxd.codegenutil
 
 import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration
+import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.modify.visit.VisitManager
 import com.github.jonathanxd.codegenutil.visitor.CodeSourceVisitor
 import com.github.jonathanxd.codegenutil.visitor.TypeVisitor
@@ -42,6 +42,11 @@ class CodeGen {
     init {
         this.visitManager.let {
             it.register(TypeDeclaration::class.java, TypeVisitor)
+            it.registerSuper(ClassDeclaration::class.java, TypeVisitor)
+            it.registerSuper(InterfaceDeclaration::class.java, TypeVisitor)
+            it.registerSuper(EnumDeclaration::class.java, TypeVisitor)
+            it.registerSuper(AnnotationDeclaration::class.java, TypeVisitor)
+
             it.register(CodeSource::class.java, CodeSourceVisitor)
         }
     }
@@ -49,7 +54,7 @@ class CodeGen {
     fun install(module: Module) {
 
         this.installedModules.forEach {
-            if(!it.isCompatible(module))
+            if (!it.isCompatible(module))
                 throw IllegalArgumentException("Module ${module.name} ($module) is not compatible with ${it.name} ($it)!!!")
         }
 
@@ -59,7 +64,7 @@ class CodeGen {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <R: CodePart> gen(codePart: R): R {
+    fun <R : CodePart> gen(codePart: R): R {
         return this.visitManager.visit(codePart) as R
     }
 }

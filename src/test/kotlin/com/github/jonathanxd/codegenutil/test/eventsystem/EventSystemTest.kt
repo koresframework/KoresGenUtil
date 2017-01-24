@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
  *      Copyright (c) contributors
  *
  *
@@ -30,21 +30,22 @@ package com.github.jonathanxd.codegenutil.test.eventsystem
 import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.MutableCodeSource
-import com.github.jonathanxd.codeapi.builder.ClassBuilder
-import com.github.jonathanxd.codeapi.classloader.CodeClassLoader
-import com.github.jonathanxd.codeapi.conversions.codeType
+import com.github.jonathanxd.codeapi.Types
+import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder
+import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader
+import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator
+import com.github.jonathanxd.codeapi.common.CodeModifier
 import com.github.jonathanxd.codeapi.conversions.createInvocation
 import com.github.jonathanxd.codeapi.conversions.extend
 import com.github.jonathanxd.codeapi.conversions.toLiteral
-import com.github.jonathanxd.codeapi.gen.visit.bytecode.BytecodeGenerator
 import com.github.jonathanxd.codeapi.helper.Predefined
+import com.github.jonathanxd.codeapi.util.codeType
 import com.github.jonathanxd.codegenutil.CodeGen
 import com.github.jonathanxd.codegenutil.implementer.Implementer
 import com.github.jonathanxd.codegenutil.property.Property
 import com.github.jonathanxd.codegenutil.property.PropertySystem
 import org.junit.Test
 import java.lang.reflect.Method
-import java.lang.reflect.Modifier
 
 class EventSystemTest {
 
@@ -64,9 +65,10 @@ class EventSystemTest {
     }
 
     fun genEventListener(klass: Class<*>, methodToInvoke: Method): Class<*> {
-        val typeDeclaration = ClassBuilder.builder()
-                .withModifiers(Modifier.PUBLIC)
+        val typeDeclaration = ClassDeclarationBuilder.builder()
+                .withModifiers(CodeModifier.PUBLIC)
                 .withQualifiedName("com.GenListener")
+                .withSuperClass(Types.OBJECT)
                 .withBody(MutableCodeSource())
                 .build()
                 .extend(EventListener::class.java)
@@ -75,7 +77,9 @@ class EventSystemTest {
 
         val declaration = createCodeGen(klass, methodToInvoke).gen(typeDeclaration)
 
-        return loader.define(BytecodeGenerator().gen(declaration))
+        val gen = BytecodeGenerator().gen(declaration)
+
+        return loader.define(gen)
     }
 
     companion object {
@@ -92,20 +96,19 @@ class EventSystemTest {
             codeGen.install(Implementer { method ->
                 return@Implementer when (method.name) {
                     "onEvent" -> {
-                        method.setBody(CodeSource.fromVarArgs(CodeAPI.returnValue(method.returnType.get(), methodToInvoke.createInvocation(
-                                        CodeAPI.accessThisField(klass.codeType, "listener"),
-                                        listOf(method.parameters[0].let {
-                                            val access = CodeAPI.accessLocalVariable(it.requiredType, it.name)
-                                            val cast = CodeAPI.cast(Event::class.java, methodToInvoke.parameterTypes[0], access)
-                                            CodeAPI.argument(cast)
-                                        })
-                                ))
-                        ))
+                        method.builder().withBody(CodeSource.fromVarArgs(CodeAPI.returnValue(method.returnType, methodToInvoke.createInvocation(
+                                CodeAPI.accessThisField(klass.codeType, "listener"),
+                                listOf(method.parameters[0].let {
+                                    val access = CodeAPI.accessLocalVariable(it.type, it.name)
+                                    val cast = CodeAPI.cast(Event::class.java, methodToInvoke.parameterTypes[0], access)
+                                    return@let cast
+                                })
+                        )))).build()
                     }
                     "call" -> {
-                        method.setBody(CodeSource.fromVarArgs(
-                                Predefined.invokePrintlnStr("Call".toLiteral())
-                        ))
+                        method.builder().withBody(CodeSource.fromVarArgs(
+                                Predefined.invokePrintlnStr("Call".toLiteral()!!)
+                        )).build()
                     }
                     else -> method
                 }

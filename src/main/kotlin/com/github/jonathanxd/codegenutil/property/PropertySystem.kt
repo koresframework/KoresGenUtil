@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
  *      Copyright (c) contributors
  *
  *
@@ -27,15 +27,19 @@
  */
 package com.github.jonathanxd.codegenutil.property
 
-import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration
+import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codegenutil.CodeGen
 import com.github.jonathanxd.codegenutil.Module
 
-class PropertySystem(vararg val properties: Property): Module {
+class PropertySystem(vararg val properties: Property) : Module {
 
     override val name: String = "PropertySystem"
 
     override fun setup(codeGen: CodeGen) {
         codeGen.visitManager.register(TypeDeclaration::class.java, TypeDeclarationVisitor(this.properties))
+        codeGen.visitManager.registerSuper(ClassDeclaration::class.java, TypeDeclarationVisitor(this.properties))
+        codeGen.visitManager.registerSuper(EnumDeclaration::class.java, TypeDeclarationVisitor(this.properties))
+        codeGen.visitManager.registerSuper(InterfaceDeclaration::class.java, TypeDeclarationVisitor(this.properties))
+        codeGen.visitManager.registerSuper(AnnotationDeclaration::class.java, TypeDeclarationVisitor(this.properties))
     }
 }

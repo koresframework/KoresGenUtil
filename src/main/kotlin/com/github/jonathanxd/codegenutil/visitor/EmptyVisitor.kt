@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
  *      Copyright (c) contributors
  *
  *
@@ -28,12 +28,12 @@
 package com.github.jonathanxd.codegenutil.visitor
 
 import com.github.jonathanxd.codeapi.CodePart
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
 import com.github.jonathanxd.codeapi.modify.visit.VisitManager
-import com.github.jonathanxd.iutils.data.MapData
 
-class EmptyVisitor<U: CodePart> : PartVisitor<U> {
-    override fun visit(codePart: U, data: MapData, visitManager: VisitManager<*>): U {
+class EmptyVisitor<U : CodePart> : PartVisitor<U> {
+    override fun visit(codePart: U, data: Data, visitManager: VisitManager<*>): U {
         return codePart
     }
 }
