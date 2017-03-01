@@ -1,10 +1,9 @@
 buildscript {
-    ext.kotlin_version = '1.1.0-rc-91'
+    ext.kotlin_version = '1.1.0'
     ext.dokka_version = '0.9.10'
 
     repositories {
         mavenCentral()
-        maven { url "http://dl.bintray.com/kotlin/kotlin-eap-1.1" }
     }
 
     dependencies {
@@ -43,7 +42,6 @@ sourceCompatibility = 1.8
 repositories {
     mavenCentral()
     maven { url "https://jitpack.io" }
-    maven { url "http://dl.bintray.com/kotlin/kotlin-eap-1.1" }
 }
 
 dependencies {
@@ -51,11 +49,11 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 
     // Utilities
-    compile 'com.github.JonathanxD:CodeAPI:3.1.0'
-    compile 'com.github.JonathanxD:CodeAPI-Conversions:1.2.2'
-    compile 'com.github.JonathanxD:JwIUtils:3.5.2'
+    compile 'com.github.JonathanxD:CodeAPI:3.2.0-a'
+    compile 'com.github.JonathanxD:CodeAPI-Conversions:1.2.2-a'
+    compile 'com.github.JonathanxD:JwIUtils:3.6.0'
 
-    testCompile 'com.github.JonathanxD:CodeAPI-BytecodeWriter:3.1.0'
+    testCompile 'com.github.JonathanxD:CodeAPI-BytecodeWriter:3.2.0-3.2.0-a'
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
