@@ -28,12 +28,12 @@
 package com.github.jonathanxd.codegenutil.visitor
 
 import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
 import com.github.jonathanxd.codeapi.modify.visit.VisitManager
+import com.github.jonathanxd.iutils.data.TypedData
 
 object CodeSourceVisitor : PartVisitor<CodeSource> {
-    override fun visit(codePart: CodeSource, data: Data, visitManager: VisitManager<*>): CodeSource {
+    override fun visit(codePart: CodeSource, data: TypedData, visitManager: VisitManager<*>): CodeSource {
         return CodeSource.fromArray(Array(codePart.size) { index -> visitManager.visit(codePart[index], data) })
     }
 }

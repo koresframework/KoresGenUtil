@@ -27,13 +27,12 @@
  */
 package com.github.jonathanxd.codegenutil.visitor
 
-import com.github.jonathanxd.codeapi.CodePart
-import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
 import com.github.jonathanxd.codeapi.modify.visit.VisitManager
+import com.github.jonathanxd.iutils.data.TypedData
 
-class EmptyVisitor<U : CodePart> : PartVisitor<U> {
-    override fun visit(codePart: U, data: Data, visitManager: VisitManager<*>): U {
+class EmptyVisitor<U : Any> : PartVisitor<U> {
+    override fun visit(codePart: U, data: TypedData, visitManager: VisitManager<*>): U {
         return codePart
     }
 }

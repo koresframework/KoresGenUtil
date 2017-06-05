@@ -32,6 +32,8 @@ import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.modify.visit.VisitManager
 import com.github.jonathanxd.codegenutil.visitor.CodeSourceVisitor
+import com.github.jonathanxd.codegenutil.visitor.ElementsHolderVisitor
+import com.github.jonathanxd.codegenutil.visitor.InnerTypesHolderVisitor
 import com.github.jonathanxd.codegenutil.visitor.TypeVisitor
 
 class CodeGen {
@@ -47,6 +49,9 @@ class CodeGen {
             it.registerSuper(EnumDeclaration::class.java, TypeVisitor)
             it.registerSuper(AnnotationDeclaration::class.java, TypeVisitor)
 
+
+            it.register(ElementsHolder::class.java, ElementsHolderVisitor)
+            it.register(InnerTypesHolder::class.java, InnerTypesHolderVisitor)
             it.register(CodeSource::class.java, CodeSourceVisitor)
         }
     }
@@ -64,7 +69,7 @@ class CodeGen {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <R : CodePart> gen(codePart: R): R {
+    fun <R : CodePart> visit(codePart: R): R {
         return this.visitManager.visit(codePart) as R
     }
 }

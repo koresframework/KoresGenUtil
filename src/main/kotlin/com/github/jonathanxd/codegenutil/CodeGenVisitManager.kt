@@ -27,18 +27,17 @@
  */
 package com.github.jonathanxd.codegenutil
 
-import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
 import com.github.jonathanxd.codeapi.modify.visit.VisitManager
 import com.github.jonathanxd.codegenutil.visitor.EmptyVisitor
 
-internal class CodeGenVisitManager<T: CodePart> : VisitManager<T>() {
+internal class CodeGenVisitManager<T : Any> : VisitManager<T>() {
 
-    override fun <U : CodePart> getVisitor(type: Class<*>): PartVisitor<U> {
+    override fun <U : Any> getVisitor(type: Class<*>): PartVisitor<U>? {
 
         try {
-            return super.getVisitor(type)
-        }catch (t: Throwable) {
+            return super.getVisitor(type) ?: EmptyVisitor()
+        } catch (t: Throwable) {
             return EmptyVisitor()
         }
 

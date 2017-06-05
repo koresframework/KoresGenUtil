@@ -27,19 +27,17 @@
  */
 package com.github.jonathanxd.codegenutil.test.eventsystem
 
-import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.MutableCodeSource
 import com.github.jonathanxd.codeapi.Types
-import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder
+import com.github.jonathanxd.codeapi.base.CodeModifier
 import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator
-import com.github.jonathanxd.codeapi.common.CodeModifier
-import com.github.jonathanxd.codeapi.conversions.createInvocation
-import com.github.jonathanxd.codeapi.conversions.extend
-import com.github.jonathanxd.codeapi.conversions.toLiteral
-import com.github.jonathanxd.codeapi.helper.Predefined
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor
+import com.github.jonathanxd.codeapi.factory.*
+import com.github.jonathanxd.codeapi.helper.invokePrintlnStr
 import com.github.jonathanxd.codeapi.util.codeType
+import com.github.jonathanxd.codeapi.util.conversion.extend
+import com.github.jonathanxd.codeapi.util.conversion.toInvocation
+import com.github.jonathanxd.codeapi.util.conversion.toLiteral
 import com.github.jonathanxd.codegenutil.CodeGen
 import com.github.jonathanxd.codegenutil.implementer.Implementer
 import com.github.jonathanxd.codegenutil.property.Property
@@ -65,19 +63,18 @@ class EventSystemTest {
     }
 
     fun genEventListener(klass: Class<*>, methodToInvoke: Method): Class<*> {
-        val typeDeclaration = ClassDeclarationBuilder.builder()
-                .withModifiers(CodeModifier.PUBLIC)
-                .withQualifiedName("com.GenListener")
-                .withSuperClass(Types.OBJECT)
-                .withBody(MutableCodeSource())
+        val typeDeclaration = classDec()
+                .modifiers(CodeModifier.PUBLIC)
+                .qualifiedName("com.GenListener")
+                .superClass(Types.OBJECT)
                 .build()
                 .extend(EventListener::class.java)
                 .extend(Generated::class.java)
 
 
-        val declaration = createCodeGen(klass, methodToInvoke).gen(typeDeclaration)
+        val declaration = createCodeGen(klass, methodToInvoke).visit(typeDeclaration)
 
-        val gen = BytecodeGenerator().gen(declaration)
+        val gen = BytecodeProcessor().process(declaration)
 
         return loader.define(gen)
     }
@@ -96,18 +93,19 @@ class EventSystemTest {
             codeGen.install(Implementer { method ->
                 return@Implementer when (method.name) {
                     "onEvent" -> {
-                        method.builder().withBody(CodeSource.fromVarArgs(CodeAPI.returnValue(method.returnType, methodToInvoke.createInvocation(
-                                CodeAPI.accessThisField(klass.codeType, "listener"),
+                        method.builder().body(CodeSource.fromVarArgs(returnValue(method.returnType, methodToInvoke.toInvocation(
+                                null,
+                                accessThisField(klass.codeType, "listener"),
                                 listOf(method.parameters[0].let {
-                                    val access = CodeAPI.accessLocalVariable(it.type, it.name)
-                                    val cast = CodeAPI.cast(Event::class.java, methodToInvoke.parameterTypes[0], access)
+                                    val access = accessVariable(it.type, it.name)
+                                    val cast = cast(Event::class.java, methodToInvoke.parameterTypes[0], access)
                                     return@let cast
                                 })
                         )))).build()
                     }
                     "call" -> {
-                        method.builder().withBody(CodeSource.fromVarArgs(
-                                Predefined.invokePrintlnStr("Call".toLiteral()!!)
+                        method.builder().body(CodeSource.fromVarArgs(
+                                invokePrintlnStr("Call".toLiteral()!!)
                         )).build()
                     }
                     else -> method

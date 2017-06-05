@@ -27,15 +27,15 @@
  */
 package com.github.jonathanxd.codegenutil.test
 
-import com.github.jonathanxd.codeapi.CodeAPI
-import com.github.jonathanxd.codeapi.MutableCodeSource
+import com.github.jonathanxd.codeapi.base.CodeModifier
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator
-import com.github.jonathanxd.codeapi.common.CodeModifier
-import com.github.jonathanxd.codeapi.conversions.extend
-import com.github.jonathanxd.codeapi.helper.Predefined
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor
+import com.github.jonathanxd.codeapi.factory.classDec
+import com.github.jonathanxd.codeapi.factory.source
+import com.github.jonathanxd.codeapi.helper.invokePrintlnStr
 import com.github.jonathanxd.codeapi.literal.Literals
+import com.github.jonathanxd.codeapi.util.conversion.extend
 import com.github.jonathanxd.codegenutil.CodeGen
 import com.github.jonathanxd.codegenutil.implementer.Implementer
 import org.junit.Test
@@ -44,10 +44,9 @@ class CodeGenTest {
 
     @Test
     fun test() {
-        val myDeclaration: TypeDeclaration = CodeAPI.aClassBuilder()
-                .withModifiers(CodeModifier.PUBLIC)
-                .withQualifiedName("com.Test")
-                .withBody(MutableCodeSource())
+        val myDeclaration: TypeDeclaration = classDec()
+                .modifiers(CodeModifier.PUBLIC)
+                .qualifiedName("com.Test")
                 .build()
 
         var extend = myDeclaration.extend(MyClass::class.java)
@@ -56,14 +55,14 @@ class CodeGenTest {
 
         gen.install(Implementer { method ->
             when (method.name) {
-                "a" -> method.builder().withBody(CodeAPI.sourceOfParts(Predefined.invokePrintlnStr(Literals.STRING("A")))).build()
+                "a" -> method.builder().body(source(invokePrintlnStr(Literals.STRING("A")))).build()
                 else -> method
             }
         })
 
-        extend = gen.gen(extend)
+        extend = gen.visit(extend)
 
-        val classes = BytecodeGenerator().gen(extend)
+        val classes = BytecodeProcessor().process(extend)
 
         val loader = CodeClassLoader()
 

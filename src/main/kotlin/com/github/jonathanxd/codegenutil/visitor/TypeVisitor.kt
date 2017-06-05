@@ -27,20 +27,16 @@
  */
 package com.github.jonathanxd.codegenutil.visitor
 
+import com.github.jonathanxd.codeapi.base.ElementsHolder
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
-import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
 import com.github.jonathanxd.codeapi.modify.visit.VisitManager
-import com.github.jonathanxd.iutils.data.MapData
+import com.github.jonathanxd.iutils.data.TypedData
 
 object TypeVisitor : PartVisitor<TypeDeclaration> {
-    override fun visit(codePart: TypeDeclaration, data: Data, visitManager: VisitManager<*>): TypeDeclaration {
-        val body = codePart.body
-
-        return if (body.isNotEmpty)
-            codePart.builder().withBody(visitManager.visit(body, data)).build()
-        else
-            codePart
+    override fun visit(codePart: TypeDeclaration, data: TypedData, visitManager: VisitManager<*>): TypeDeclaration {
+        return (visitManager.visit(ElementsHolder::class.java, codePart, data) as TypeDeclaration)
+                .builder().build()
 
     }
 }

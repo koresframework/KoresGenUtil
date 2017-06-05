@@ -27,36 +27,36 @@
  */
 package com.github.jonathanxd.codegenutil.property
 
-import com.github.jonathanxd.codeapi.CodeAPI
-import com.github.jonathanxd.codeapi.MutableCodeSource
+import com.github.jonathanxd.codeapi.CodeSource
+import com.github.jonathanxd.codeapi.base.CodeModifier
+import com.github.jonathanxd.codeapi.base.ElementsHolder
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
-import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder
-import com.github.jonathanxd.codeapi.common.CodeModifier
-import com.github.jonathanxd.codeapi.common.Data
-import com.github.jonathanxd.codeapi.factory.field
+import com.github.jonathanxd.codeapi.factory.*
 import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
 import com.github.jonathanxd.codeapi.modify.visit.VisitManager
-import java.util.*
+import com.github.jonathanxd.iutils.data.TypedData
 
 class TypeDeclarationVisitor(val properties: Array<out Property>) : PartVisitor<TypeDeclaration> {
 
-    override fun visit(codePart: TypeDeclaration, data: Data, visitManager: VisitManager<*>): TypeDeclaration {
-        val body = codePart.body.toMutable()
+    override fun visit(codePart: TypeDeclaration, data: TypedData, visitManager: VisitManager<*>): TypeDeclaration {
+        return codePart.builder()
+                .fields(this.properties.map {
+                    fieldDec()
+                            .modifiers(CodeModifier.PRIVATE, CodeModifier.FINAL)
+                            .type(it.type)
+                            .name(it.name)
+                            .build()
+                })
+                .constructors(codePart.constructors + constructorDec()
+                        .modifiers(CodeModifier.PUBLIC)
+                        .parameters(this.properties.map { parameter(type = it.type, name = it.name) })
+                        .body(CodeSource.fromIterable(
+                                this.properties.map { setThisFieldValue(it.type, it.name, accessVariable(it.type, it.name)) }
+                        ))
+                        .build())
+                .build().let {
+            visitManager.visit(ElementsHolder::class.java, it, data) as TypeDeclaration
+        }
 
-        val fields = this.properties.map { field(EnumSet.of(CodeModifier.PRIVATE, CodeModifier.FINAL), it.type, it.name) }
-
-        val constructor = ConstructorDeclarationBuilder.builder()
-                .withModifiers(CodeModifier.PUBLIC)
-                .withParameters(this.properties.map { CodeAPI.parameter(it.type, it.name) })
-                .withBody(MutableCodeSource(
-                        this.properties.map { CodeAPI.setThisField(it.type, it.name, CodeAPI.accessLocalVariable(it.type, it.name)) }
-                ))
-                .build()
-
-        body.addAll(fields)
-
-        body.add(constructor)
-
-        return codePart.builder().withBody(visitManager.visit(body, data)).build()
     }
 }

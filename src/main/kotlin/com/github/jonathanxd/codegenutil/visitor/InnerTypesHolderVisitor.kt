@@ -25,23 +25,20 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil.implementer
+package com.github.jonathanxd.codegenutil.visitor
 
-import com.github.jonathanxd.codeapi.base.MethodDeclaration
+import com.github.jonathanxd.codeapi.base.InnerTypesHolder
 import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
 import com.github.jonathanxd.codeapi.modify.visit.VisitManager
 import com.github.jonathanxd.iutils.data.TypedData
 
-class MethodVisitor(private val function: (MethodDeclaration) -> MethodDeclaration) : PartVisitor<MethodDeclaration> {
+object InnerTypesHolderVisitor : PartVisitor<InnerTypesHolder> {
 
-    override fun visit(codePart: MethodDeclaration, data: TypedData, visitManager: VisitManager<*>): MethodDeclaration {
-        val part = function(codePart)
+    override fun visit(codePart: InnerTypesHolder, data: TypedData, visitManager: VisitManager<*>): InnerTypesHolder {
+        return codePart.builder()
+                .innerTypes(codePart.innerTypes.map { visitManager.visit(it, data) })
+                .build()
 
-        val body = part.body
 
-        if (body.isNotEmpty)
-            return part.builder().body(visitManager.visit(part.body, data)).build()
-
-        return part
     }
 }
