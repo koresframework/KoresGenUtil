@@ -40,7 +40,7 @@ class TypeDeclarationVisitor(val properties: Array<out Property>) : PartVisitor<
 
     override fun visit(codePart: TypeDeclaration, data: TypedData, visitManager: VisitManager<*>): TypeDeclaration {
         return codePart.builder()
-                .fields(this.properties.map {
+                .fields(codePart.fields + this.properties.map {
                     fieldDec()
                             .modifiers(CodeModifier.PRIVATE, CodeModifier.FINAL)
                             .type(it.type)
