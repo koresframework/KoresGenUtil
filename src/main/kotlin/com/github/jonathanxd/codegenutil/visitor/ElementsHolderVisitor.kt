@@ -27,6 +27,7 @@
  */
 package com.github.jonathanxd.codegenutil.visitor
 
+import com.github.jonathanxd.codeapi.base.ConstructorsHolder
 import com.github.jonathanxd.codeapi.base.ElementsHolder
 import com.github.jonathanxd.codeapi.base.InnerTypesHolder
 import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
@@ -35,14 +36,28 @@ import com.github.jonathanxd.iutils.data.TypedData
 
 object ElementsHolderVisitor : PartVisitor<ElementsHolder> {
 
+
     override fun visit(codePart: ElementsHolder, data: TypedData, visitManager: VisitManager<*>): ElementsHolder {
-        return (visitManager.visit(InnerTypesHolder::class.java, codePart, data) as ElementsHolder).builder()
-                .staticBlock(visitManager.visit(codePart.staticBlock, data))
-                .fields(codePart.fields.map { visitManager.visit(it, data) })
-                .constructors(codePart.constructors.map { visitManager.visit(it, data) })
-                .methods(codePart.methods.map { visitManager.visit(it, data) })
+        fun ElementsHolder.visitAsInnerHolder(): ElementsHolder =
+                visitManager.visit(InnerTypesHolder::class.java, this, data) as ElementsHolder
+
+
+        fun ElementsHolder.visitIfCtr(): ElementsHolder =
+                (this as? ConstructorsHolder)?.let { visitManager.visit(ConstructorsHolder::class.java, it, data) as ElementsHolder }
+                        ?: this
+
+        return codePart.visitAsInnerHolder().visitIfCtr().let {
+            it.builder()
+                .staticBlock(visitManager.visit(it.staticBlock, data))
+                .fields(it.fields.map { visitManager.visit(it, data) })
+                .let { builder ->
+                    if (builder is ConstructorsHolder.Builder<*, *> && it is ConstructorsHolder) {
+                        builder.constructors(it.constructors.map { visitManager.visit(it, data) })
+                                as ElementsHolder.Builder<ElementsHolder, *>
+                    } else builder
+                }
+                .methods(it.methods.map { visitManager.visit(it, data) })
                 .build()
-
-
+        }
     }
 }

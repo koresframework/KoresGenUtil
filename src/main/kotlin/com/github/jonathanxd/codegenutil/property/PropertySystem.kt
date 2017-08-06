@@ -41,5 +41,7 @@ class PropertySystem(vararg val properties: Property) : Module {
         codeGen.visitManager.registerSuper(EnumDeclaration::class.java, TypeDeclarationVisitor(this.properties))
         codeGen.visitManager.registerSuper(InterfaceDeclaration::class.java, TypeDeclarationVisitor(this.properties))
         codeGen.visitManager.registerSuper(AnnotationDeclaration::class.java, TypeDeclarationVisitor(this.properties))
+
+        codeGen.visitManager.register(ConstructorsHolder::class.java, ConstructorsHolderVisitor(this.properties))
     }
 }

@@ -30,7 +30,7 @@ package com.github.jonathanxd.codegenutil.test
 import com.github.jonathanxd.codeapi.base.CodeModifier
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader
-import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator
 import com.github.jonathanxd.codeapi.factory.classDec
 import com.github.jonathanxd.codeapi.factory.source
 import com.github.jonathanxd.codeapi.helper.invokePrintlnStr
@@ -62,7 +62,7 @@ class CodeGenTest {
 
         extend = gen.visit(extend)
 
-        val classes = BytecodeProcessor().process(extend)
+        val classes = BytecodeGenerator().process(extend)
 
         val loader = CodeClassLoader()
 

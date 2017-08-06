@@ -31,7 +31,7 @@ import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.CodeModifier
 import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader
-import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator
 import com.github.jonathanxd.codeapi.factory.*
 import com.github.jonathanxd.codeapi.helper.invokePrintlnStr
 import com.github.jonathanxd.codeapi.util.codeType
@@ -74,7 +74,9 @@ class EventSystemTest {
 
         val declaration = createCodeGen(klass, methodToInvoke).visit(typeDeclaration)
 
-        val gen = BytecodeProcessor().process(declaration)
+        val gen = BytecodeGenerator().process(declaration)
+
+
 
         return loader.define(gen)
     }

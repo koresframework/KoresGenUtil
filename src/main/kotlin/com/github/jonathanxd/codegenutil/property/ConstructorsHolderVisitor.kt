@@ -27,29 +27,27 @@
  */
 package com.github.jonathanxd.codegenutil.property
 
+import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.base.CodeModifier
 import com.github.jonathanxd.codeapi.base.ConstructorsHolder
 import com.github.jonathanxd.codeapi.base.ElementsHolder
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
-import com.github.jonathanxd.codeapi.factory.fieldDec
+import com.github.jonathanxd.codeapi.factory.*
 import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
 import com.github.jonathanxd.codeapi.modify.visit.VisitManager
 import com.github.jonathanxd.iutils.data.TypedData
 
-class TypeDeclarationVisitor(val properties: Array<out Property>) : PartVisitor<TypeDeclaration> {
+class ConstructorsHolderVisitor(val properties: Array<out Property>) : PartVisitor<ConstructorsHolder> {
 
-    override fun visit(codePart: TypeDeclaration, data: TypedData, visitManager: VisitManager<*>): TypeDeclaration {
+    override fun visit(codePart: ConstructorsHolder, data: TypedData, visitManager: VisitManager<*>): ConstructorsHolder {
         return codePart.builder()
-                .fields(codePart.fields + this.properties.map {
-                    fieldDec()
-                            .modifiers(CodeModifier.PRIVATE, CodeModifier.FINAL)
-                            .type(it.type)
-                            .name(it.name)
-                            .build()
-                })
-                .build().let {
-            visitManager.visit(ElementsHolder::class.java, it, data) as TypeDeclaration
-        }
-
+                .constructors(codePart.constructors + constructorDec()
+                        .modifiers(CodeModifier.PUBLIC)
+                        .parameters(this.properties.map { parameter(type = it.type, name = it.name) })
+                        .body(CodeSource.fromIterable(
+                                this.properties.map { setThisFieldValue(it.type, it.name, accessVariable(it.type, it.name)) }
+                        ))
+                        .build())
+                .build()
     }
 }
