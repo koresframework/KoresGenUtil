@@ -18,7 +18,7 @@ plugins {
 }
 
 group 'com.github.jonathanxd'
-version '1.2.12'
+version '1.2.13'
 
 allprojects {
     // IDE
@@ -50,9 +50,9 @@ dependencies {
 
     // Utilities
     compile 'com.github.JonathanxD:JwIUtils:4.7.7'
-    compile 'com.github.JonathanxD:CodeAPI:alpha-4.0.0-base-29'
+    compile 'com.github.JonathanxD:CodeAPI:4.0.0.1-beta'
 
-    testCompile 'com.github.JonathanxD:CodeAPI-BytecodeWriter:alpha-4.0.0-bytecode-37'
+    testCompile 'com.github.JonathanxD.CodeAPI-BytecodeWriter:CodeAPI-BytecodeWriter:4.0.0.2-beta-bytecode'
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
