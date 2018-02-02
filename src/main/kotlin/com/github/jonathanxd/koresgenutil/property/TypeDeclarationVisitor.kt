@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,29 +25,32 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil.property
+package com.github.jonathanxd.koresgenutil.property
 
-import com.github.jonathanxd.codeapi.base.CodeModifier
-import com.github.jonathanxd.codeapi.base.ConstructorsHolder
-import com.github.jonathanxd.codeapi.base.ElementsHolder
-import com.github.jonathanxd.codeapi.base.TypeDeclaration
-import com.github.jonathanxd.codeapi.factory.fieldDec
-import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
-import com.github.jonathanxd.codeapi.modify.visit.VisitManager
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.kores.base.ElementsHolder
+import com.github.jonathanxd.kores.base.KoresModifier
+import com.github.jonathanxd.kores.base.TypeDeclaration
+import com.github.jonathanxd.kores.factory.fieldDec
+import com.github.jonathanxd.kores.modify.visit.PartVisitor
+import com.github.jonathanxd.kores.modify.visit.VisitManager
 
 class TypeDeclarationVisitor(val properties: Array<out Property>) : PartVisitor<TypeDeclaration> {
 
-    override fun visit(codePart: TypeDeclaration, data: TypedData, visitManager: VisitManager<*>): TypeDeclaration {
-        return codePart.builder()
-                .fields(codePart.fields + this.properties.map {
-                    fieldDec()
-                            .modifiers(CodeModifier.PRIVATE, CodeModifier.FINAL)
-                            .type(it.type)
-                            .name(it.name)
-                            .build()
-                })
-                .build().let {
+    override fun visit(
+        koresPart: TypeDeclaration,
+        data: TypedData,
+        visitManager: VisitManager<*>
+    ): TypeDeclaration {
+        return koresPart.builder()
+            .fields(koresPart.fields + this.properties.map {
+                fieldDec()
+                    .modifiers(KoresModifier.PRIVATE, KoresModifier.FINAL)
+                    .type(it.type)
+                    .name(it.name)
+                    .build()
+            })
+            .build().let {
             visitManager.visit(ElementsHolder::class.java, it, data) as TypeDeclaration
         }
 

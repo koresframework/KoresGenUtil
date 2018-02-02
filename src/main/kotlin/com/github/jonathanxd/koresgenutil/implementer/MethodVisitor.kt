@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,23 +25,23 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil.property
+package com.github.jonathanxd.koresgenutil.implementer
 
-import com.github.jonathanxd.codeapi.base.*
-import com.github.jonathanxd.codegenutil.CodeGen
-import com.github.jonathanxd.codegenutil.Module
+import com.github.jonathanxd.kores.base.MethodDeclaration
+import com.github.jonathanxd.kores.modify.visit.PartVisitor
+import com.github.jonathanxd.kores.modify.visit.VisitManager
+import com.github.jonathanxd.iutils.data.TypedData
 
-class PropertySystem(vararg val properties: Property) : Module {
+class MethodVisitor(private val function: (MethodDeclaration) -> MethodDeclaration) : PartVisitor<MethodDeclaration> {
 
-    override val name: String = "PropertySystem"
+    override fun visit(koresPart: MethodDeclaration, data: TypedData, visitManager: VisitManager<*>): MethodDeclaration {
+        val part = function(koresPart)
 
-    override fun setup(codeGen: CodeGen) {
-        codeGen.visitManager.register(TypeDeclaration::class.java, TypeDeclarationVisitor(this.properties))
-        codeGen.visitManager.registerSuper(ClassDeclaration::class.java, TypeDeclarationVisitor(this.properties))
-        codeGen.visitManager.registerSuper(EnumDeclaration::class.java, TypeDeclarationVisitor(this.properties))
-        codeGen.visitManager.registerSuper(InterfaceDeclaration::class.java, TypeDeclarationVisitor(this.properties))
-        codeGen.visitManager.registerSuper(AnnotationDeclaration::class.java, TypeDeclarationVisitor(this.properties))
+        val body = part.body
 
-        codeGen.visitManager.register(ConstructorsHolder::class.java, ConstructorsHolderVisitor(this.properties))
+        if (body.isNotEmpty)
+            return part.builder().body(visitManager.visit(part.body, data)).build()
+
+        return part
     }
 }

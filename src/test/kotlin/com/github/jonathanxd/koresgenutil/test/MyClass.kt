@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,7 +25,12 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil.test.eventsystem
+package com.github.jonathanxd.koresgenutil.test
 
-interface Event {
+open class MyClass {
+
+    open fun a() {
+        Thread.dumpStack()
+    }
+
 }

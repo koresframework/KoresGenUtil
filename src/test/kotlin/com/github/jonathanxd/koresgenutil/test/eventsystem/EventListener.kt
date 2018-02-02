@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,8 +25,10 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil.property
+package com.github.jonathanxd.koresgenutil.test.eventsystem
 
-import com.github.jonathanxd.codeapi.type.CodeType
+interface EventListener {
 
-data class Property(val name: String, val type: CodeType)
+    fun onEvent(event: Event)
+
+}

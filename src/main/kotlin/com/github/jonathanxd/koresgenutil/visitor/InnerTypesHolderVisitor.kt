@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,10 +25,24 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil.test.eventsystem
+package com.github.jonathanxd.koresgenutil.visitor
 
-interface EventListener {
+import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.kores.base.InnerTypesHolder
+import com.github.jonathanxd.kores.modify.visit.PartVisitor
+import com.github.jonathanxd.kores.modify.visit.VisitManager
 
-    fun onEvent(event: Event)
+object InnerTypesHolderVisitor : PartVisitor<InnerTypesHolder> {
 
+    override fun visit(
+        koresPart: InnerTypesHolder,
+        data: TypedData,
+        visitManager: VisitManager<*>
+    ): InnerTypesHolder {
+        return koresPart.builder()
+            .innerTypes(koresPart.innerTypes.map { visitManager.visit(it, data) })
+            .build()
+
+
+    }
 }

@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,12 +25,23 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil.test
+package com.github.jonathanxd.koresgenutil.property
 
-open class MyClass {
+import com.github.jonathanxd.kores.base.*
+import com.github.jonathanxd.koresgenutil.CodeGen
+import com.github.jonathanxd.koresgenutil.Module
 
-    open fun a() {
-        Thread.dumpStack()
+class PropertySystem(vararg val properties: Property) : Module {
+
+    override val name: String = "PropertySystem"
+
+    override fun setup(codeGen: CodeGen) {
+        codeGen.visitManager.register(TypeDeclaration::class.java, TypeDeclarationVisitor(this.properties))
+        codeGen.visitManager.registerSuper(ClassDeclaration::class.java, TypeDeclarationVisitor(this.properties))
+        codeGen.visitManager.registerSuper(EnumDeclaration::class.java, TypeDeclarationVisitor(this.properties))
+        codeGen.visitManager.registerSuper(InterfaceDeclaration::class.java, TypeDeclarationVisitor(this.properties))
+        codeGen.visitManager.registerSuper(AnnotationDeclaration::class.java, TypeDeclarationVisitor(this.properties))
+
+        codeGen.visitManager.register(ConstructorsHolder::class.java, ConstructorsHolderVisitor(this.properties))
     }
-
 }

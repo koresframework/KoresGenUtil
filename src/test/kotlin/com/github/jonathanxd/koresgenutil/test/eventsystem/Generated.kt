@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,20 +25,9 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil.visitor
+package com.github.jonathanxd.koresgenutil.test.eventsystem
 
-import com.github.jonathanxd.codeapi.base.InnerTypesHolder
-import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
-import com.github.jonathanxd.codeapi.modify.visit.VisitManager
-import com.github.jonathanxd.iutils.data.TypedData
+interface Generated {
+    fun call()
 
-object InnerTypesHolderVisitor : PartVisitor<InnerTypesHolder> {
-
-    override fun visit(codePart: InnerTypesHolder, data: TypedData, visitManager: VisitManager<*>): InnerTypesHolder {
-        return codePart.builder()
-                .innerTypes(codePart.innerTypes.map { visitManager.visit(it, data) })
-                .build()
-
-
-    }
 }

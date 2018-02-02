@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,22 +25,8 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil.implementer
+package com.github.jonathanxd.koresgenutil.property
 
-import com.github.jonathanxd.codeapi.base.MethodDeclaration
-import com.github.jonathanxd.codegenutil.CodeGen
-import com.github.jonathanxd.codegenutil.Module
+import com.github.jonathanxd.kores.type.KoresType
 
-/**
- * Implements all methods.
- */
-class Implementer(function: (MethodDeclaration) -> MethodDeclaration) : Module {
-
-    override val name: String = "Implementer"
-
-    private val methodVisitor = MethodVisitor(function)
-
-    override fun setup(codeGen: CodeGen) {
-        codeGen.visitManager.register(MethodDeclaration::class.java, methodVisitor)
-    }
-}
+data class Property(val name: String, val type: KoresType)

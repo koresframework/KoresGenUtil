@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,15 +25,24 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil.visitor
+package com.github.jonathanxd.koresgenutil.visitor
 
-import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
-import com.github.jonathanxd.codeapi.modify.visit.VisitManager
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.kores.Instructions
+import com.github.jonathanxd.kores.modify.visit.PartVisitor
+import com.github.jonathanxd.kores.modify.visit.VisitManager
 
-object CodeSourceVisitor : PartVisitor<CodeSource> {
-    override fun visit(codePart: CodeSource, data: TypedData, visitManager: VisitManager<*>): CodeSource {
-        return CodeSource.fromArray(Array(codePart.size) { index -> visitManager.visit(codePart[index], data) })
+object InstructionsVisitor : PartVisitor<Instructions> {
+    override fun visit(
+        koresPart: Instructions,
+        data: TypedData,
+        visitManager: VisitManager<*>
+    ): Instructions {
+        return Instructions.fromArray(Array(koresPart.size) { index ->
+            visitManager.visit(
+                koresPart[index],
+                data
+            )
+        })
     }
 }

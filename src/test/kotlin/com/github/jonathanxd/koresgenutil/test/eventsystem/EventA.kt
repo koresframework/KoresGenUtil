@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,23 +25,10 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil.implementer
+package com.github.jonathanxd.koresgenutil.test.eventsystem
 
-import com.github.jonathanxd.codeapi.base.MethodDeclaration
-import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
-import com.github.jonathanxd.codeapi.modify.visit.VisitManager
-import com.github.jonathanxd.iutils.data.TypedData
+class EventA: Event {
 
-class MethodVisitor(private val function: (MethodDeclaration) -> MethodDeclaration) : PartVisitor<MethodDeclaration> {
+    fun getName() = "EventA"
 
-    override fun visit(codePart: MethodDeclaration, data: TypedData, visitManager: VisitManager<*>): MethodDeclaration {
-        val part = function(codePart)
-
-        val body = part.body
-
-        if (body.isNotEmpty)
-            return part.builder().body(visitManager.visit(part.body, data)).build()
-
-        return part
-    }
 }

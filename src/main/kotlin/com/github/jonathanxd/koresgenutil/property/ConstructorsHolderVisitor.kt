@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,26 +25,26 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil.property
+package com.github.jonathanxd.koresgenutil.property
 
-import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.base.CodeModifier
-import com.github.jonathanxd.codeapi.base.ConstructorsHolder
-import com.github.jonathanxd.codeapi.base.ElementsHolder
-import com.github.jonathanxd.codeapi.base.TypeDeclaration
-import com.github.jonathanxd.codeapi.factory.*
-import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
-import com.github.jonathanxd.codeapi.modify.visit.VisitManager
+import com.github.jonathanxd.kores.Instructions
+import com.github.jonathanxd.kores.base.KoresModifier
+import com.github.jonathanxd.kores.base.ConstructorsHolder
+import com.github.jonathanxd.kores.base.ElementsHolder
+import com.github.jonathanxd.kores.base.TypeDeclaration
+import com.github.jonathanxd.kores.factory.*
+import com.github.jonathanxd.kores.modify.visit.PartVisitor
+import com.github.jonathanxd.kores.modify.visit.VisitManager
 import com.github.jonathanxd.iutils.data.TypedData
 
 class ConstructorsHolderVisitor(val properties: Array<out Property>) : PartVisitor<ConstructorsHolder> {
 
-    override fun visit(codePart: ConstructorsHolder, data: TypedData, visitManager: VisitManager<*>): ConstructorsHolder {
-        return codePart.builder()
-                .constructors(codePart.constructors + constructorDec()
-                        .modifiers(CodeModifier.PUBLIC)
+    override fun visit(koresPart: ConstructorsHolder, data: TypedData, visitManager: VisitManager<*>): ConstructorsHolder {
+        return koresPart.builder()
+                .constructors(koresPart.constructors + constructorDec()
+                        .modifiers(KoresModifier.PUBLIC)
                         .parameters(this.properties.map { parameter(type = it.type, name = it.name) })
-                        .body(CodeSource.fromIterable(
+                        .body(Instructions.fromIterable(
                                 this.properties.map { setThisFieldValue(it.type, it.name, accessVariable(it.type, it.name)) }
                         ))
                         .build())

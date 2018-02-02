@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,19 +25,19 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil.test
+package com.github.jonathanxd.koresgenutil.test
 
-import com.github.jonathanxd.codeapi.base.CodeModifier
-import com.github.jonathanxd.codeapi.base.TypeDeclaration
-import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader
-import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator
-import com.github.jonathanxd.codeapi.factory.classDec
-import com.github.jonathanxd.codeapi.factory.source
-import com.github.jonathanxd.codeapi.helper.invokePrintlnStr
-import com.github.jonathanxd.codeapi.literal.Literals
-import com.github.jonathanxd.codeapi.util.conversion.extend
-import com.github.jonathanxd.codegenutil.CodeGen
-import com.github.jonathanxd.codegenutil.implementer.Implementer
+import com.github.jonathanxd.kores.base.KoresModifier
+import com.github.jonathanxd.kores.base.TypeDeclaration
+import com.github.jonathanxd.kores.bytecode.classloader.CodeClassLoader
+import com.github.jonathanxd.kores.bytecode.processor.BytecodeGenerator
+import com.github.jonathanxd.kores.factory.classDec
+import com.github.jonathanxd.kores.factory.source
+import com.github.jonathanxd.kores.helper.invokePrintlnStr
+import com.github.jonathanxd.kores.literal.Literals
+import com.github.jonathanxd.kores.util.conversion.extend
+import com.github.jonathanxd.koresgenutil.CodeGen
+import com.github.jonathanxd.koresgenutil.implementer.Implementer
 import org.junit.Test
 
 class CodeGenTest {
@@ -45,7 +45,7 @@ class CodeGenTest {
     @Test
     fun test() {
         val myDeclaration: TypeDeclaration = classDec()
-                .modifiers(CodeModifier.PUBLIC)
+                .modifiers(KoresModifier.PUBLIC)
                 .qualifiedName("com.Test")
                 .build()
 

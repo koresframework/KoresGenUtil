@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,20 +25,20 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil
+package com.github.jonathanxd.koresgenutil
 
-import com.github.jonathanxd.codeapi.CodePart
-import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.base.*
-import com.github.jonathanxd.codeapi.modify.visit.VisitManager
-import com.github.jonathanxd.codegenutil.visitor.CodeSourceVisitor
-import com.github.jonathanxd.codegenutil.visitor.ElementsHolderVisitor
-import com.github.jonathanxd.codegenutil.visitor.InnerTypesHolderVisitor
-import com.github.jonathanxd.codegenutil.visitor.TypeVisitor
+import com.github.jonathanxd.kores.KoresPart
+import com.github.jonathanxd.kores.Instructions
+import com.github.jonathanxd.kores.base.*
+import com.github.jonathanxd.kores.modify.visit.VisitManager
+import com.github.jonathanxd.koresgenutil.visitor.InstructionsVisitor
+import com.github.jonathanxd.koresgenutil.visitor.ElementsHolderVisitor
+import com.github.jonathanxd.koresgenutil.visitor.InnerTypesHolderVisitor
+import com.github.jonathanxd.koresgenutil.visitor.TypeVisitor
 
 class CodeGen {
 
-    val visitManager: VisitManager<CodePart> = CodeGenVisitManager()
+    val visitManager: VisitManager<KoresPart> = CodeGenVisitManager()
     private val installedModules = mutableListOf<Module>()
 
     init {
@@ -52,7 +52,7 @@ class CodeGen {
 
             it.register(ElementsHolder::class.java, ElementsHolderVisitor)
             it.register(InnerTypesHolder::class.java, InnerTypesHolderVisitor)
-            it.register(CodeSource::class.java, CodeSourceVisitor)
+            it.register(Instructions::class.java, InstructionsVisitor)
         }
     }
 
@@ -69,7 +69,7 @@ class CodeGen {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <R : CodePart> visit(codePart: R): R {
-        return this.visitManager.visit(codePart) as R
+    fun <R : KoresPart> visit(koresPart: R): R {
+        return this.visitManager.visit(koresPart) as R
     }
 }

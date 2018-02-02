@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,19 +25,19 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil.visitor
+package com.github.jonathanxd.koresgenutil.visitor
 
-import com.github.jonathanxd.codeapi.base.ConstructorsHolder
-import com.github.jonathanxd.codeapi.base.ElementsHolder
-import com.github.jonathanxd.codeapi.base.InnerTypesHolder
-import com.github.jonathanxd.codeapi.modify.visit.PartVisitor
-import com.github.jonathanxd.codeapi.modify.visit.VisitManager
+import com.github.jonathanxd.kores.base.ConstructorsHolder
+import com.github.jonathanxd.kores.base.ElementsHolder
+import com.github.jonathanxd.kores.base.InnerTypesHolder
+import com.github.jonathanxd.kores.modify.visit.PartVisitor
+import com.github.jonathanxd.kores.modify.visit.VisitManager
 import com.github.jonathanxd.iutils.data.TypedData
 
 object ElementsHolderVisitor : PartVisitor<ElementsHolder> {
 
 
-    override fun visit(codePart: ElementsHolder, data: TypedData, visitManager: VisitManager<*>): ElementsHolder {
+    override fun visit(koresPart: ElementsHolder, data: TypedData, visitManager: VisitManager<*>): ElementsHolder {
         fun ElementsHolder.visitAsInnerHolder(): ElementsHolder =
                 visitManager.visit(InnerTypesHolder::class.java, this, data) as ElementsHolder
 
@@ -46,7 +46,7 @@ object ElementsHolderVisitor : PartVisitor<ElementsHolder> {
                 (this as? ConstructorsHolder)?.let { visitManager.visit(ConstructorsHolder::class.java, it, data) as ElementsHolder }
                         ?: this
 
-        return codePart.visitAsInnerHolder().visitIfCtr().let {
+        return koresPart.visitAsInnerHolder().visitIfCtr().let {
             it.builder()
                 .staticBlock(visitManager.visit(it.staticBlock, data))
                 .fields(it.fields.map { visitManager.visit(it, data) })

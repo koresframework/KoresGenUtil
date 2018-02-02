@@ -1,9 +1,9 @@
 /**
- *      CodeGenUtil - Code generation utilities built on top of CodeAPI
+ *      KoresGenUtil - Code generation utilities built on top of Kores
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 JonathanxD <https://github.com/JonathanxD/>
+ *      Copyright (c) 2018 JonathanxD <https://github.com/JonathanxD/KoresGenUtil>
  *      Copyright (c) contributors
  *
  *
@@ -25,12 +25,14 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codegenutil
+package com.github.jonathanxd.koresgenutil.visitor
 
-interface Module {
-    val name: String
+import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.kores.modify.visit.PartVisitor
+import com.github.jonathanxd.kores.modify.visit.VisitManager
 
-    fun setup(codeGen: CodeGen)
-
-    fun isCompatible(module: Module) = true
+class EmptyVisitor<U : Any> : PartVisitor<U> {
+    override fun visit(koresPart: U, data: TypedData, visitManager: VisitManager<*>): U {
+        return koresPart
+    }
 }
