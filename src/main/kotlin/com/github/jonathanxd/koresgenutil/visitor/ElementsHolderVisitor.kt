@@ -27,24 +27,34 @@
  */
 package com.github.jonathanxd.koresgenutil.visitor
 
+import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.kores.base.ConstructorsHolder
 import com.github.jonathanxd.kores.base.ElementsHolder
 import com.github.jonathanxd.kores.base.InnerTypesHolder
 import com.github.jonathanxd.kores.modify.visit.PartVisitor
 import com.github.jonathanxd.kores.modify.visit.VisitManager
-import com.github.jonathanxd.iutils.data.TypedData
 
 object ElementsHolderVisitor : PartVisitor<ElementsHolder> {
 
 
-    override fun visit(koresPart: ElementsHolder, data: TypedData, visitManager: VisitManager<*>): ElementsHolder {
+    override fun visit(
+        koresPart: ElementsHolder,
+        data: TypedData,
+        visitManager: VisitManager<*>
+    ): ElementsHolder {
         fun ElementsHolder.visitAsInnerHolder(): ElementsHolder =
-                visitManager.visit(InnerTypesHolder::class.java, this, data) as ElementsHolder
+            visitManager.visit(InnerTypesHolder::class.java, this, data) as ElementsHolder
 
 
         fun ElementsHolder.visitIfCtr(): ElementsHolder =
-                (this as? ConstructorsHolder)?.let { visitManager.visit(ConstructorsHolder::class.java, it, data) as ElementsHolder }
-                        ?: this
+            (this as? ConstructorsHolder)?.let {
+                visitManager.visit(
+                    ConstructorsHolder::class.java,
+                    it,
+                    data
+                ) as ElementsHolder
+            }
+                    ?: this
 
         return koresPart.visitAsInnerHolder().visitIfCtr().let {
             it.builder()

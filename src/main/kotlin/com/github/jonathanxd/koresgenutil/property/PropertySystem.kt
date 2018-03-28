@@ -36,12 +36,30 @@ class PropertySystem(vararg val properties: Property) : Module {
     override val name: String = "PropertySystem"
 
     override fun setup(codeGen: CodeGen) {
-        codeGen.visitManager.register(TypeDeclaration::class.java, TypeDeclarationVisitor(this.properties))
-        codeGen.visitManager.registerSuper(ClassDeclaration::class.java, TypeDeclarationVisitor(this.properties))
-        codeGen.visitManager.registerSuper(EnumDeclaration::class.java, TypeDeclarationVisitor(this.properties))
-        codeGen.visitManager.registerSuper(InterfaceDeclaration::class.java, TypeDeclarationVisitor(this.properties))
-        codeGen.visitManager.registerSuper(AnnotationDeclaration::class.java, TypeDeclarationVisitor(this.properties))
+        codeGen.visitManager.register(
+            TypeDeclaration::class.java,
+            TypeDeclarationVisitor(this.properties)
+        )
+        codeGen.visitManager.registerSuper(
+            ClassDeclaration::class.java,
+            TypeDeclarationVisitor(this.properties)
+        )
+        codeGen.visitManager.registerSuper(
+            EnumDeclaration::class.java,
+            TypeDeclarationVisitor(this.properties)
+        )
+        codeGen.visitManager.registerSuper(
+            InterfaceDeclaration::class.java,
+            TypeDeclarationVisitor(this.properties)
+        )
+        codeGen.visitManager.registerSuper(
+            AnnotationDeclaration::class.java,
+            TypeDeclarationVisitor(this.properties)
+        )
 
-        codeGen.visitManager.register(ConstructorsHolder::class.java, ConstructorsHolderVisitor(this.properties))
+        codeGen.visitManager.register(
+            ConstructorsHolder::class.java,
+            ConstructorsHolderVisitor(this.properties)
+        )
     }
 }

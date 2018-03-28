@@ -27,14 +27,19 @@
  */
 package com.github.jonathanxd.koresgenutil.implementer
 
+import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.kores.base.MethodDeclaration
 import com.github.jonathanxd.kores.modify.visit.PartVisitor
 import com.github.jonathanxd.kores.modify.visit.VisitManager
-import com.github.jonathanxd.iutils.data.TypedData
 
-class MethodVisitor(private val function: (MethodDeclaration) -> MethodDeclaration) : PartVisitor<MethodDeclaration> {
+class MethodVisitor(private val function: (MethodDeclaration) -> MethodDeclaration) :
+    PartVisitor<MethodDeclaration> {
 
-    override fun visit(koresPart: MethodDeclaration, data: TypedData, visitManager: VisitManager<*>): MethodDeclaration {
+    override fun visit(
+        koresPart: MethodDeclaration,
+        data: TypedData,
+        visitManager: VisitManager<*>
+    ): MethodDeclaration {
         val part = function(koresPart)
 
         val body = part.body

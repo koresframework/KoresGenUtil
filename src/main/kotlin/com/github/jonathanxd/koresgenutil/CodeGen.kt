@@ -27,13 +27,13 @@
  */
 package com.github.jonathanxd.koresgenutil
 
-import com.github.jonathanxd.kores.KoresPart
 import com.github.jonathanxd.kores.Instructions
+import com.github.jonathanxd.kores.KoresPart
 import com.github.jonathanxd.kores.base.*
 import com.github.jonathanxd.kores.modify.visit.VisitManager
-import com.github.jonathanxd.koresgenutil.visitor.InstructionsVisitor
 import com.github.jonathanxd.koresgenutil.visitor.ElementsHolderVisitor
 import com.github.jonathanxd.koresgenutil.visitor.InnerTypesHolderVisitor
+import com.github.jonathanxd.koresgenutil.visitor.InstructionsVisitor
 import com.github.jonathanxd.koresgenutil.visitor.TypeVisitor
 
 class CodeGen {

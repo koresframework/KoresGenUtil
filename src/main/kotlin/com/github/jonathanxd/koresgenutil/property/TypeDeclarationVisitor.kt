@@ -51,8 +51,8 @@ class TypeDeclarationVisitor(val properties: Array<out Property>) : PartVisitor<
                     .build()
             })
             .build().let {
-            visitManager.visit(ElementsHolder::class.java, it, data) as TypeDeclaration
-        }
+                visitManager.visit(ElementsHolder::class.java, it, data) as TypeDeclaration
+            }
 
     }
 }

@@ -27,27 +27,39 @@
  */
 package com.github.jonathanxd.koresgenutil.property
 
+import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.kores.Instructions
-import com.github.jonathanxd.kores.base.KoresModifier
 import com.github.jonathanxd.kores.base.ConstructorsHolder
-import com.github.jonathanxd.kores.base.ElementsHolder
-import com.github.jonathanxd.kores.base.TypeDeclaration
-import com.github.jonathanxd.kores.factory.*
+import com.github.jonathanxd.kores.base.KoresModifier
+import com.github.jonathanxd.kores.factory.accessVariable
+import com.github.jonathanxd.kores.factory.constructorDec
+import com.github.jonathanxd.kores.factory.parameter
+import com.github.jonathanxd.kores.factory.setThisFieldValue
 import com.github.jonathanxd.kores.modify.visit.PartVisitor
 import com.github.jonathanxd.kores.modify.visit.VisitManager
-import com.github.jonathanxd.iutils.data.TypedData
 
-class ConstructorsHolderVisitor(val properties: Array<out Property>) : PartVisitor<ConstructorsHolder> {
+class ConstructorsHolderVisitor(val properties: Array<out Property>) :
+    PartVisitor<ConstructorsHolder> {
 
-    override fun visit(koresPart: ConstructorsHolder, data: TypedData, visitManager: VisitManager<*>): ConstructorsHolder {
+    override fun visit(
+        koresPart: ConstructorsHolder,
+        data: TypedData,
+        visitManager: VisitManager<*>
+    ): ConstructorsHolder {
         return koresPart.builder()
-                .constructors(koresPart.constructors + constructorDec()
-                        .modifiers(KoresModifier.PUBLIC)
-                        .parameters(this.properties.map { parameter(type = it.type, name = it.name) })
-                        .body(Instructions.fromIterable(
-                                this.properties.map { setThisFieldValue(it.type, it.name, accessVariable(it.type, it.name)) }
-                        ))
-                        .build())
-                .build()
+            .constructors(koresPart.constructors + constructorDec()
+                .modifiers(KoresModifier.PUBLIC)
+                .parameters(this.properties.map { parameter(type = it.type, name = it.name) })
+                .body(Instructions.fromIterable(
+                    this.properties.map {
+                        setThisFieldValue(
+                            it.type,
+                            it.name,
+                            accessVariable(it.type, it.name)
+                        )
+                    }
+                ))
+                .build())
+            .build()
     }
 }
